@@ -1,5 +1,4 @@
 from asyncio import Semaphore
-import typing as typ
 import asyncio
 import re
 import os
@@ -8,7 +7,7 @@ from bs4 import BeautifulSoup
 from aiohttp import ClientSession
 
 
-def create_path(obj: typ.Any, user_name, file_format) -> str:
+def create_path(obj: str, user_name: str, file_format: str) -> str:
     code = hash(obj)
     path = 'images/{}'.format(user_name)
     if not os.path.exists(path):
@@ -36,7 +35,7 @@ async def fetch(session: ClientSession, url: str, params: dict = None, return_fo
             return await response.read()
 
 
-async def download_photo(session, semaphore, resource, user_name, file_format):
+async def download_photo(session: ClientSession, semaphore: Semaphore, resource: str, user_name: str, file_format: str):
     async with semaphore:
         with open(create_path(resource, user_name, file_format), 'wb') as file:
             file.write(await fetch(session, resource, return_format='read'))
